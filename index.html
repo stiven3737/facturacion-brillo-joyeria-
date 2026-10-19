@@ -567,8 +567,9 @@
                     <h1 class="font-serif italic text-3xl font-bold text-amber-700">Brillo Joyería</h1>
                     <p class="text-xs text-gray-600 mt-1">Joyería Fina & Piedras Naturales</p>
                     <p class="text-xs text-gray-500">NIT: 900.123.456-1</p>
-                    <p class="text-xs text-gray-500">Tel / WhatsApp: +57 300 123 4567</p>
-                    <p class="text-xs text-gray-500">Instagram: @brillojoyeria.med</p>
+                    <p class="text-xs text-gray-500">Tel / WhatsApp: +57 3022123031</p>
+                    <p class="text-xs text-gray-500">Tik-Tok : @brillo_joyeria1</p>
+                    <p class="text-xs text-gray-500">Pagina web : brillojoyeria1.vercel.app</p>
                     <p class="text-xs text-gray-500">Medellín, Colombia</p>
                 </div>
                 <div class="text-right">
@@ -620,7 +621,7 @@
 
             <div class="text-center pt-6 border-t border-gray-200 space-y-2">
                 <p class="font-serif italic text-amber-800 text-sm">"Gracias por brillar con nosotros ✨"</p>
-                <p class="text-[10px] text-gray-400">Conserve esta factura para cambios o garantías (30 días por defectos de fábrica).</p>
+                <p class="text-xs text-gray-500">Factura generada automáticamente por Brillo Joyería </p>
             </div>
 
             <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 print:hidden">
@@ -1625,6 +1626,22 @@ git commit -m "fix solucion definitiva pdf en blanco celulares"
 git push origin main
 ¡Pruébalo y me cuentas cómo te va!
 
+ya no me quiere general la factura completa sale mocha
+
+Ya veo lo que pasa en la imagen: al momento de imprimir o generar el PDF en el celular, los estilos de impresión de la página (@media print) estaban cortando la tarjeta y ocultando la parte de los productos y el total.
+
+He actualizado tu aplicación corrigiendo los estilos de impresión para que la factura salga completa de arriba a abajo, sin cortarse ni quedar "mocha".
+
+Ícono de HTML
+Brillo_Joyeria_Facturacion
+ HTML 
+💎 ¿Qué se corrigió?
+Ajuste de Impresión / PDF: Se rediseñó la regla de impresión para que el área de la factura (#invoice-print-area) abarque toda la altura necesaria sin límites de pantalla ni recortes.
+
+Visualización Completa: Ahora al presionar 📥 Descargar PDF o Imprimir desde tu celular, el documento saldrá íntegro con el encabezado, los datos del cliente, la lista completa de joyas, los totales y el pie de página de Brillo Joyería.
+
+Descarga este nuevo archivo, reemplázalo en tu carpeta y súbelo a tu GitHub con tus comandos de siempre (git add ., git commit -m "fix factura mocha impresion" y git push origin main). ¡Pruébalo y me cuentas!
+
 
 
 
@@ -1677,23 +1694,42 @@ Analyzing
 
     <style>
         @media print {
+            body, html {
+                background: white !important;
+                color: black !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
             body * {
                 visibility: hidden;
             }
-            #invoice-print-area, #invoice-print-area * {
+            #invoice-view-modal, #invoice-view-modal *, #invoice-print-area, #invoice-print-area * {
                 visibility: visible;
             }
+            #invoice-view-modal {
+                position: absolute !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                background: white !important;
+                overflow: visible !important;
+                display: block !important;
+            }
             #invoice-print-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                margin: 0;
-                padding: 20px;
+                position: relative !important;
+                left: 0 !important;
+                top: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 15px !important;
                 background: white !important;
                 color: black !important;
                 border: none !important;
                 box-shadow: none !important;
+                overflow: visible !important;
+                height: auto !important;
             }
             .print\:hidden {
                 display: none !important;
