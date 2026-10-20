@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brillo Joyería - Sistema de Facturación</title>
+    <title>Brillo Joyería - Sistema de Facturación y Gestión</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -261,7 +261,7 @@
             <div class="flex justify-between items-center">
                 <div>
                     <h2 class="font-serif text-3xl font-bold text-white">Historial de Facturas</h2>
-                    <p class="text-sm text-gray-400">Consulta, modifica fecha y descarga tus facturas emitidas</p>
+                    <p class="text-sm text-gray-400">Consulta, modifica fecha, elimina y descarga tus facturas emitidas</p>
                 </div>
             </div>
             <div class="bg-cardBg border border-darkBorder rounded-2xl p-6 space-y-4">
@@ -284,7 +284,7 @@
             </div>
         </section>
 
-        <!-- 3. CUSTOMERS TAB (Client Purchase History) -->
+        <!-- 3. CUSTOMERS TAB -->
         <section id="tab-customers" class="space-y-6 hidden">
             <div class="flex justify-between items-center">
                 <div>
@@ -312,28 +312,136 @@
             </div>
         </section>
 
-        <!-- 4. CATALOG TAB -->
+        <!-- 4. CATALOG / PRODUCTS TAB (FULL CRUD) -->
         <section id="tab-catalog" class="space-y-6 hidden">
-            <div class="flex justify-between items-center">
-                <div><h2 class="font-serif text-3xl font-bold text-white">Productos</h2></div>
-                <button onclick="openProductModal()" class="px-4 py-2 gold-gradient-bg text-black font-semibold rounded-xl text-sm">Nuevo Producto</button>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="font-serif text-3xl font-bold text-white">Gestión de Productos (CRUD Completo)</h2>
+                    <p class="text-sm text-gray-400">Crea, visualiza, edita y elimina productos de tu joyería</p>
+                </div>
+                <button onclick="openProductModal()" class="px-4 py-2.5 gold-gradient-bg text-black font-bold rounded-xl text-xs flex items-center gap-2 shadow hover:opacity-95 transition">
+                    <span>+ Nuevo Producto</span>
+                </button>
             </div>
-            <div id="catalog-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            <div class="bg-cardBg border border-darkBorder rounded-2xl p-6 space-y-4">
+                <input type="text" id="catalog-search" oninput="renderCatalog()" placeholder="Buscar producto en catálogo..." class="w-full md:w-96 bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-black/40 text-xs uppercase text-gold font-semibold border-b border-darkBorder">
+                            <tr>
+                                <th class="px-4 py-3">ID / Joya</th>
+                                <th class="px-4 py-3">Categoría</th>
+                                <th class="px-4 py-3">Descripción</th>
+                                <th class="px-4 py-3 text-right">Precio</th>
+                                <th class="px-4 py-3 text-center">Stock</th>
+                                <th class="px-4 py-3 text-center">Acciones (CRUD)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="catalog-table-body" class="divide-y divide-darkBorder"></tbody>
+                    </table>
+                </div>
+            </div>
         </section>
 
-        <!-- 5. INVENTORY TAB -->
+        <!-- 5. INVENTORY TAB (FULL CRUD) -->
         <section id="tab-inventory" class="space-y-6 hidden">
-            <div class="flex justify-between items-center"><h2 class="font-serif text-3xl font-bold text-white">Inventario</h2></div>
-            <div class="bg-cardBg border border-darkBorder rounded-2xl p-6">
-                <table class="w-full text-left text-sm text-gray-300">
-                    <thead class="bg-black/40 text-xs uppercase text-gold font-semibold border-b border-darkBorder">
-                        <tr><th class="px-4 py-3">Producto</th><th class="px-4 py-3 text-center">Stock</th><th class="px-4 py-3 text-right">Acción</th></tr>
-                    </thead>
-                    <tbody id="inventory-table-body" class="divide-y divide-darkBorder"></tbody>
-                </table>
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div>
+                    <h2 class="font-serif text-3xl font-bold text-white">Gestión de Inventario (CRUD Completo)</h2>
+                    <p class="text-sm text-gray-400">Controla stock, entradas, salidas y ajustes de inventario de tus joyas</p>
+                </div>
+                <button onclick="openInventoryModal()" class="px-4 py-2.5 gold-gradient-bg text-black font-bold rounded-xl text-xs flex items-center gap-2 shadow hover:opacity-95 transition">
+                    <span>+ Agregar Stock / Ítem</span>
+                </button>
+            </div>
+            <div class="bg-cardBg border border-darkBorder rounded-2xl p-6 space-y-4">
+                <input type="text" id="inventory-search" oninput="renderInventory()" placeholder="Buscar en inventario..." class="w-full md:w-96 bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm text-gray-300">
+                        <thead class="bg-black/40 text-xs uppercase text-gold font-semibold border-b border-darkBorder">
+                            <tr>
+                                <th class="px-4 py-3">Producto / Joya</th>
+                                <th class="px-4 py-3">Categoría</th>
+                                <th class="px-4 py-3 text-right">Precio Unit.</th>
+                                <th class="px-4 py-3 text-center">Stock Actual</th>
+                                <th class="px-4 py-3 text-right">Valor Total Stock</th>
+                                <th class="px-4 py-3 text-center">Acciones (CRUD Stock)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body" class="divide-y divide-darkBorder"></tbody>
+                    </table>
+                </div>
             </div>
         </section>
     </main>
+
+    <!-- PRODUCT MODAL (CREATE / EDIT) -->
+    <div id="product-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gold/50 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="font-serif text-xl font-bold text-gold" id="product-modal-title">Nuevo Producto</h3>
+            <input type="hidden" id="prod-id">
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Nombre de la Joya</label>
+                    <input type="text" id="prod-name" placeholder="Ej. Anillo Oro 18k" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Categoría</label>
+                        <input type="text" id="prod-category" placeholder="Ej. Anillos / Manillas" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Stock Inicial</label>
+                        <input type="number" id="prod-stock" value="10" min="0" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Precio ($)</label>
+                    <input type="number" id="prod-price" placeholder="480000" min="0" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Descripción / Materiales</label>
+                    <input type="text" id="prod-desc" placeholder="Ej. Oro 18k con esmeralda natural" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeProductModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-xl text-xs font-semibold">Cancelar</button>
+                <button onclick="saveProduct()" class="px-4 py-2 gold-gradient-bg text-black rounded-xl text-xs font-bold">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- INVENTORY ADJUST MODAL (EDIT STOCK) -->
+    <div id="inventory-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-cardBg border border-gold/50 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+            <h3 class="font-serif text-xl font-bold text-gold" id="inventory-modal-title">Ajustar Inventario</h3>
+            <input type="hidden" id="inv-item-id">
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Producto</label>
+                    <input type="text" id="inv-item-name" placeholder="Nombre de joya" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-400 mb-1">Categoría</label>
+                        <input type="text" id="inv-item-category" placeholder="Categoría" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gold mb-1">Stock (Cantidad)</label>
+                        <input type="number" id="inv-item-stock" min="0" class="w-full bg-black/50 border border-gold/50 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-400 mb-1">Precio Unitario ($)</label>
+                    <input type="number" id="inv-item-price" min="0" class="w-full bg-black/50 border border-darkBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-gold">
+                </div>
+            </div>
+            <div class="flex justify-end gap-3 pt-2">
+                <button onclick="closeInventoryModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-xl text-xs font-semibold">Cancelar</button>
+                <button onclick="saveInventoryItem()" class="px-4 py-2 gold-gradient-bg text-black rounded-xl text-xs font-bold">Guardar Stock</button>
+            </div>
+        </div>
+    </div>
 
     <!-- EDIT CART ITEM MODAL -->
     <div id="edit-item-modal" class="fixed inset-0 z-50 bg-black/90 backdrop-blur-md hidden flex items-center justify-center p-4">
@@ -421,10 +529,13 @@
                 <p class="font-serif italic text-amber-800 text-sm">"Gracias por brillar con nosotros ✨"</p>
             </div>
 
-            <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 print:hidden">
-                <button onclick="closeInvoiceModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-xl text-xs font-semibold">Cerrar</button>
-                <button onclick="sendInvoiceWhatsApp()" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold">💬 WhatsApp</button>
-                <button onclick="downloadInvoicePDF()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">📥 PDF</button>
+            <div class="flex justify-between items-center pt-4 border-t border-gray-200 print:hidden">
+                <button onclick="deleteCurrentInvoice()" class="px-4 py-2 bg-red-600 text-white rounded-xl text-xs font-semibold hover:bg-red-700">🗑️ Eliminar Factura</button>
+                <div class="flex gap-2">
+                    <button onclick="closeInvoiceModal()" class="px-4 py-2 bg-gray-200 text-gray-800 rounded-xl text-xs font-semibold">Cerrar</button>
+                    <button onclick="sendInvoiceWhatsApp()" class="px-4 py-2 bg-emerald-600 text-white rounded-xl text-xs font-semibold">💬 WhatsApp</button>
+                    <button onclick="downloadInvoicePDF()" class="px-4 py-2 bg-amber-600 text-white rounded-xl text-xs font-semibold">📥 PDF</button>
+                </div>
             </div>
         </div>
     </div>
@@ -629,6 +740,14 @@
             const discount = parseFloat(document.getElementById('discount-amount').value) || 0;
             const total = Math.max(0, subtotal - discount);
 
+            // Deduct stock in inventory
+            state.cart.forEach(cartItem => {
+                const prod = state.products.find(p => p.id == cartItem.id);
+                if (prod) {
+                    prod.stock = Math.max(0, prod.stock - cartItem.qty);
+                }
+            });
+
             const invoiceId = `BR-${1001 + state.invoices.length}`;
             const newInv = {
                 id: invoiceId,
@@ -649,6 +768,196 @@
             renderPosProductList();
 
             openInvoiceModal(invoiceId);
+        }
+
+        // --- CRUD PRODUCTS FUNCTIONS ---
+        function renderCatalog() {
+            const search = document.getElementById('catalog-search').value.toLowerCase();
+            const tbody = document.getElementById('catalog-table-body');
+            const filtered = state.products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
+
+            tbody.innerHTML = filtered.length === 0 ? '<tr><td colspan="6" class="text-center py-6 text-gray-500">No hay productos registrados en el catálogo</td></tr>' :
+                filtered.map(p => `
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-4 py-3 font-medium text-white">${p.name}</td>
+                        <td class="px-4 py-3 text-gold text-xs">${p.category || 'General'}</td>
+                        <td class="px-4 py-3 text-gray-400 text-xs">${p.desc || '-'}</td>
+                        <td class="px-4 py-3 text-right font-bold text-white">${formatMoney(p.price)}</td>
+                        <td class="px-4 py-3 text-center text-gold font-bold">${p.stock}</td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            <button onclick="openProductModal(${p.id})" class="px-2.5 py-1 bg-blue-600/20 text-blue-400 rounded text-xs font-semibold hover:bg-blue-600/40">Editar</button>
+                            <button onclick="deleteProduct(${p.id})" class="px-2.5 py-1 bg-red-600/20 text-red-400 rounded text-xs font-semibold hover:bg-red-600/40">Eliminar</button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function openProductModal(id = null) {
+            if (id) {
+                const prod = state.products.find(p => p.id === id);
+                if (!prod) return;
+                document.getElementById('product-modal-title').innerText = "Editar Producto";
+                document.getElementById('prod-id').value = prod.id;
+                document.getElementById('prod-name').value = prod.name;
+                document.getElementById('prod-category').value = prod.category || '';
+                document.getElementById('prod-stock').value = prod.stock;
+                document.getElementById('prod-price').value = prod.price;
+                document.getElementById('prod-desc').value = prod.desc || '';
+            } else {
+                document.getElementById('product-modal-title').innerText = "Nuevo Producto";
+                document.getElementById('prod-id').value = '';
+                document.getElementById('prod-name').value = '';
+                document.getElementById('prod-category').value = '';
+                document.getElementById('prod-stock').value = 10;
+                document.getElementById('prod-price').value = '';
+                document.getElementById('prod-desc').value = '';
+            }
+            document.getElementById('product-modal').classList.remove('hidden');
+        }
+
+        function closeProductModal() {
+            document.getElementById('product-modal').classList.add('hidden');
+        }
+
+        function saveProduct() {
+            const id = document.getElementById('prod-id').value;
+            const name = document.getElementById('prod-name').value.trim();
+            const category = document.getElementById('prod-category').value.trim() || 'General';
+            const stock = parseInt(document.getElementById('prod-stock').value) || 0;
+            const price = parseFloat(document.getElementById('prod-price').value) || 0;
+            const desc = document.getElementById('prod-desc').value.trim();
+
+            if (!name || price <= 0) {
+                alert("Por favor ingresa el nombre de la joya y un precio válido.");
+                return;
+            }
+
+            if (id) {
+                // Update
+                const prod = state.products.find(p => String(p.id) === String(id));
+                if (prod) {
+                    prod.name = name;
+                    prod.category = category;
+                    prod.stock = stock;
+                    prod.price = price;
+                    prod.desc = desc;
+                }
+            } else {
+                // Create
+                const newId = state.products.length > 0 ? Math.max(...state.products.map(p => p.id)) + 1 : 1;
+                state.products.push({ id: newId, name, category, stock, price, desc });
+            }
+
+            saveData();
+            closeProductModal();
+            renderCatalog();
+            renderPosProductList();
+        }
+
+        function deleteProduct(id) {
+            if (confirm("¿Estás seguro de que deseas eliminar este producto del catálogo?")) {
+                state.products = state.products.filter(p => p.id !== id);
+                saveData();
+                renderCatalog();
+                renderPosProductList();
+            }
+        }
+
+        // --- CRUD INVENTORY FUNCTIONS ---
+        function renderInventory() {
+            const search = document.getElementById('inventory-search').value.toLowerCase();
+            const tbody = document.getElementById('inventory-table-body');
+            const filtered = state.products.filter(p => p.name.toLowerCase().includes(search) || p.category.toLowerCase().includes(search));
+
+            tbody.innerHTML = filtered.length === 0 ? '<tr><td colspan="6" class="text-center py-6 text-gray-500">No hay ítems en inventario</td></tr>' :
+                filtered.map(p => `
+                    <tr class="hover:bg-white/5 transition">
+                        <td class="px-4 py-3 font-medium text-white">${p.name}</td>
+                        <td class="px-4 py-3 text-gold text-xs">${p.category || 'General'}</td>
+                        <td class="px-4 py-3 text-right text-gray-300">${formatMoney(p.price)}</td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="px-2 py-1 bg-black/60 border ${p.stock <= 3 ? 'border-red-500 text-red-400' : 'border-gold text-gold'} rounded-lg font-bold text-xs">${p.stock} un.</span>
+                        </td>
+                        <td class="px-4 py-3 text-right font-bold text-white">${formatMoney(p.stock * p.price)}</td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            <button onclick="openInventoryModal(${p.id})" class="px-2.5 py-1 bg-gold/20 text-gold rounded text-xs font-semibold hover:bg-gold/30">Ajustar Stock</button>
+                            <button onclick="deleteProduct(${p.id}); renderInventory();" class="px-2.5 py-1 bg-red-600/20 text-red-400 rounded text-xs font-semibold hover:bg-red-600/40">Eliminar</button>
+                        </td>
+                    </tr>
+                `).join('');
+        }
+
+        function openInventoryModal(id = null) {
+            if (id) {
+                const p = state.products.find(item => item.id === id);
+                if (!p) return;
+                document.getElementById('inventory-modal-title').innerText = "Ajustar Stock de Producto";
+                document.getElementById('inv-item-id').value = p.id;
+                document.getElementById('inv-item-name').value = p.name;
+                document.getElementById('inv-item-category').value = p.category || 'General';
+                document.getElementById('inv-item-stock').value = p.stock;
+                document.getElementById('inv-item-price').value = p.price;
+            } else {
+                document.getElementById('inventory-modal-title').innerText = "Agregar Nuevo Ítem al Inventario";
+                document.getElementById('inv-item-id').value = '';
+                document.getElementById('inv-item-name').value = '';
+                document.getElementById('inv-item-category').value = 'General';
+                document.getElementById('inv-item-stock').value = 10;
+                document.getElementById('inv-item-price').value = '';
+            }
+            document.getElementById('inventory-modal').classList.remove('hidden');
+        }
+
+        function closeInventoryModal() {
+            document.getElementById('inventory-modal').classList.add('hidden');
+        }
+
+        function saveInventoryItem() {
+            const id = document.getElementById('inv-item-id').value;
+            const name = document.getElementById('inv-item-name').value.trim();
+            const category = document.getElementById('inv-item-category').value.trim() || 'General';
+            const stock = parseInt(document.getElementById('inv-item-stock').value) || 0;
+            const price = parseFloat(document.getElementById('inv-item-price').value) || 0;
+
+            if (!name || price <= 0) {
+                alert("Por favor ingresa un nombre y precio válido.");
+                return;
+            }
+
+            if (id) {
+                const p = state.products.find(item => String(item.id) === String(id));
+                if (p) {
+                    p.name = name;
+                    p.category = category;
+                    p.stock = stock;
+                    p.price = price;
+                }
+            } else {
+                const newId = state.products.length > 0 ? Math.max(...state.products.map(p => p.id)) + 1 : 1;
+                state.products.push({ id: newId, name, category, stock, price, desc: "Nuevo ítem de inventario" });
+            }
+
+            saveData();
+            closeInventoryModal();
+            renderInventory();
+            renderCatalog();
+            renderPosProductList();
+        }
+
+        // --- DELETE INVOICE FUNCTIONS ---
+        function deleteInvoice(id) {
+            if (confirm(`¿Estás seguro de que deseas eliminar la factura #${id}?`)) {
+                state.invoices = state.invoices.filter(i => i.id !== id);
+                saveData();
+                renderInvoices();
+                closeInvoiceModal();
+            }
+        }
+
+        function deleteCurrentInvoice() {
+            if (state.currentInvoiceForModal) {
+                deleteInvoice(state.currentInvoiceForModal.id);
+            }
         }
 
         function startVoiceInput() {
@@ -795,7 +1104,8 @@
                             ${inv.items.map(i => `<li>${i.name} (x${i.qty}) - ${formatMoney(i.subtotal)}</li>`).join('')}
                         </ul>
                     </div>
-                    <div class="text-right pt-2">
+                    <div class="flex justify-between items-center pt-2">
+                        <button onclick="closeCustomerModal(); deleteInvoice('${inv.id}')" class="px-2 py-1 bg-red-600/20 text-red-400 rounded text-xs font-semibold hover:bg-red-600/40">Eliminar</button>
                         <button onclick="closeCustomerModal(); openInvoiceModal('${inv.id}')" class="px-3 py-1 bg-gold text-black font-bold rounded text-xs">Ver Factura</button>
                     </div>
                 </div>
@@ -866,32 +1176,17 @@
                         <td class="px-4 py-3 font-medium text-white">${inv.client.name}</td>
                         <td class="px-4 py-3 text-gray-300">${inv.paymentMethod}</td>
                         <td class="px-4 py-3 text-right font-bold text-white">${formatMoney(inv.total)}</td>
-                        <td class="px-4 py-3 text-center"><button onclick="openInvoiceModal('${inv.id}')" class="px-2.5 py-1 bg-gold/20 text-gold rounded text-xs font-semibold hover:bg-gold/30">Ver Factura</button></td>
+                        <td class="px-4 py-3 text-center space-x-2">
+                            <button onclick="openInvoiceModal('${inv.id}')" class="px-2.5 py-1 bg-gold/20 text-gold rounded text-xs font-semibold hover:bg-gold/30">Ver</button>
+                            <button onclick="deleteInvoice('${inv.id}')" class="px-2.5 py-1 bg-red-600/20 text-red-400 rounded text-xs font-semibold hover:bg-red-600/40">Eliminar</button>
+                        </td>
                     </tr>
                 `).join('');
-        }
-
-        function renderCatalog() {
-            const grid = document.getElementById('catalog-grid');
-            grid.innerHTML = state.products.map(p => `
-                <div class="bg-cardBg border border-darkBorder rounded-2xl p-4 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-white">${p.name}</h4>
-                        <p class="text-xs text-gold">${formatMoney(p.price)}</p>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderInventory() {
-            const tbody = document.getElementById('inventory-table-body');
-            tbody.innerHTML = state.products.map(p => `
-                <tr><td class="px-4 py-3 text-white">${p.name}</td><td class="px-4 py-3 text-center text-white">${p.stock}</td><td class="px-4 py-3 text-right"><button onclick="p.stock += 5; saveData(); renderInventory();" class="px-2 py-1 bg-gold/20 text-gold rounded text-xs">+5</button></td></tr>
-            `).join('');
         }
 
         window.onload = () => { renderPosProductList(); };
     </script>
 </body>
 </html>
-
+index.html
+Mostrando index.html.
